@@ -196,3 +196,13 @@ button:focus-visible {
   top: 15px;
   transform: rotate(180deg);
 }
+
+/* New */
+
+#correct {
+  background-color: chartreuse;
+}
+
+#wrong {
+  background-color: crimson;
+}

@@ -91,6 +91,10 @@ const CardsFlash = () => {
     /*const [previousCard, setPreviousCard] = useState(null);*/
     const [flipped, setFlipped] = useState(false);
 
+    // new
+    const [guess, setGuess] = useState('');
+    const [correctGuess, setCorrectGuess] = useState('');
+
     const handleFlip = () => {
         setFlipped(!flipped);
     }
@@ -129,6 +133,44 @@ const CardsFlash = () => {
             setFlipped(false);
         }*/
     }
+
+    const levenshteinDistance = (a, b) => {
+        
+        const matrix = [];
+
+        for (let i  = 0; i <= b.length; i++){
+                matrix[i] = [i];
+        }
+
+        for (let j = 0; j <= a.length; j++) {
+                matrix[0][j] = j;
+        }
+
+        for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                        if (b.charAt(i-1) === a.charAt(j-1)) {
+                                matrix[i][j] = matrix[i-1][j-1];
+                        } else {
+                                matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
+                        }
+                }
+        }
+        return matrix[b.length][a.length];
+    }
+
+    const checkAnswer = () => {
+
+        const correctAnswer = data[currentSet].cards[currentCard].back.info;
+        const distance = levenshteinDistance(guess.toLowerCase(), correctAnswer.toLowerCase());
+
+        if (distance <= 2) {
+                setCorrectGuess('correct');
+        }else {
+                setCorrectGuess('wrong');
+        }
+
+        setGuess('');
+    }
     
     return (
         <div>
@@ -149,10 +191,19 @@ const CardsFlash = () => {
                     />
                 )}
             </div>
+            <div className="type-answer" id={correctGuess}>
+                <input
+                    type="text"
+                    placeholder="Enter guess .." 
+                    value={guess}
+                    onChange={(e) => setGuess(e.target.value)}
+                />
+                <button className ="button submit" type="submit" onClick={checkAnswer}>Check Guess</button>
+            </div>
             <button className="nav-button prev-button" onClick={handlePrevious}></button>
             <button className="nav-button next-button" onClick={handleNext}></button>
         </div>
     )
 }
 
-export default FlashCards
+export default CardsFlash
