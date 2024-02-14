@@ -200,9 +200,48 @@ button:focus-visible {
 /* New */
 
 #correct {
-  background-color: chartreuse;
+  background-color: rgb(176, 235, 121);
 }
 
 #wrong {
-  background-color: crimson;
+  background-color: rgba(220, 20, 60, 0.482);
+}
+
+.input-text {
+  font-size: larger;
+  font-weight: bold;
+  width: 300px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+.button.submit {
+  font-size: large;
+  font-weight: bold;
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.button.submit:hover {
+  background-color: rgba(78, 185, 209, 0.611);
+}
+
+.type-answer {
+  margin-top: 20px;
+}
+
+.shuffle {
+  background-color: #ffffff51;
+  font-size: large;
+  font-weight: bold;
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.shuffle:hover {
+    background-color: rgba(26, 100, 197, 0.416);
 }

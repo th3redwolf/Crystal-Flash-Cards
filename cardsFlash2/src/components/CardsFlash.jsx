@@ -94,31 +94,116 @@ const CardsFlash = () => {
     // new
     const [guess, setGuess] = useState('');
     const [correctGuess, setCorrectGuess] = useState('');
+    const [shuffle, setShuffle] = useState([]);
+    // *end new
 
     const handleFlip = () => {
         setFlipped(!flipped);
     }
-    
+
+
+
+
+
+
+
+
     const handleNext = () => {
 
         if (startCardShown) {
             setStartCardShown(false);
         }
-        let randomSetIndex, randomCardIndex;
-        do {
-            randomSetIndex = Math.floor(Math.random() * data.length);
-            randomCardIndex = Math.floor(Math.random() * data[randomSetIndex].cards.length);
-        } while ((startCardShown && randomSetIndex === 0) || randomSetIndex === currentSet && randomCardIndex === currentCard);
-        setHistory([...history, {set: currentSet, card: currentCard}]);
-        setCurrentSet(randomSetIndex);
-        setCurrentCard(randomCardIndex);
-        setFlipped(false);
+        else {
 
-        /*setPreviousCard(currentCard);*/
-        
+            setHistory([...history, {set: currentSet, card: currentCard}]);
+            
+            if (shuffle.length > 0) {
+
+                const currentData = shuffle;
+                if (currentCard < currentData.length - 1){
+                    setCurrentCard(currentCard + 1);
+                }
+                else {
+                    setCurrentCard(0);
+                }
+            }
+            else {
+
+                const currentData = data;
+                if (currentCard < currentData[currentSet].cards.length - 1){
+                    setCurrentCard(currentCard + 1);
+                }
+                else {
+                    if (currentSet < currentData.length - 1) {
+                        setCurrentSet(currentSet + 1);
+                        setCurrentCard(0);
+                    }
+                    else {
+                        setCurrentSet(0);
+                        setCurrentCard(0);
+                    }
+                }
+            }  
+        }
+        setFlipped(false);
+        setCorrectGuess('');
+        setGuess('');
     }
 
+
+
+
+
+
+
+
+
+    // new
+    /*const handleNext = () => {
+
+        if (startCardShown) {
+            setStartCardShown(false);
+        }
+
+        if (shuffle.length === 0){
+
+            if (currentCard >= data[currentSet].cards.length - 1){
+                setCurrentSet(currentSet + 1);
+                setCurrentCard(0);
+            }
+            else {
+                setCurrentCard(currentCard + 1);
+            }
+
+            if (currentSet >= data.length -1) {
+                setCurrentSet(0);
+                setCurrentCard(0);
+            }
+        }
+        else {
+
+            if (currentCard >= shuffle[currentSet].cards.length -1){
+                setCurrentSet(currentSet + 1);
+                setCurrentCard(0);
+            }
+            else {
+                setCurrentCard(currentCard + 1)
+            }
+
+            if (currentSet >= shuffle.length - 1){
+                setCurrentSet(0);
+                setCurrentCard(0);
+            }
+        }
+        setFlipped(false);
+
+        setCorrectGuess('');
+        setGuess('');
+    }*/
+    // *end new
+
     const handlePrevious = () => {
+
         if (history.length > 0) {
             const lastViewed = history[history.length - 1];
             setCurrentSet(lastViewed.set);
@@ -126,7 +211,6 @@ const CardsFlash = () => {
             setHistory(history.slice(0, -1));
             setFlipped(false);
           }
-
         /*
         if (previousCard !== null) {
             setCurrentCard(previousCard);
@@ -134,43 +218,35 @@ const CardsFlash = () => {
         }*/
     }
 
-    const levenshteinDistance = (a, b) => {
-        
-        const matrix = [];
+    const shuffleCards = () => {
 
-        for (let i  = 0; i <= b.length; i++){
-                matrix[i] = [i];
-        }
+        let allCards = data.flatMap(set => set.cards.map(card => ({...card, set: set.set})));
 
-        for (let j = 0; j <= a.length; j++) {
-                matrix[0][j] = j;
-        }
+        for (let i = allCards.length -1; i > 0; i--){
 
-        for (let i = 1; i <= b.length; i++) {
-                for (let j = 1; j <= a.length; j++) {
-                        if (b.charAt(i-1) === a.charAt(j-1)) {
-                                matrix[i][j] = matrix[i-1][j-1];
-                        } else {
-                                matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
-                        }
-                }
+            const j = Math.floor(Math.random() * (i + 1));
+            [allCards[i], allCards[j]] = [allCards[j], allCards[i]];
         }
-        return matrix[b.length][a.length];
+        setShuffle(allCards);
     }
 
+    // New (project3)
     const checkAnswer = () => {
 
-        const correctAnswer = data[currentSet].cards[currentCard].back.info;
-        const distance = levenshteinDistance(guess.toLowerCase(), correctAnswer.toLowerCase());
+        const correctAnswer = shuffle.length === 0
+            ? data[currentSet].cards[currentCard].back.info.toLowerCase()
+            : shuffle[currentCard].back.info.toLowerCase();
+        //const distance = levenshteinDistance(guess.toLowerCase(), correctAnswer.toLowerCase());
+        const guessLowCase = guess.toLowerCase();
 
-        if (distance <= 2) {
-                setCorrectGuess('correct');
-        }else {
-                setCorrectGuess('wrong');
+        if (guessLowCase.length >= 3 && correctAnswer.includes(guessLowCase)) {
+            setCorrectGuess('correct');
         }
-
-        setGuess('');
+        else {
+            setCorrectGuess('wrong');
+        }
     }
+    // *end new
     
     return (
         <div>
@@ -182,25 +258,35 @@ const CardsFlash = () => {
                         front={startCard.cards[0].front}
                         back={startCard.cards[0].back}
                     />
-                ) : (
+                ) : shuffle.length === 0 ? (
                     <Cards
                         key={data[currentSet].cards[currentCard].id}
                         set={data[currentSet].set}
                         front={data[currentSet].cards[currentCard].front}
                         back={data[currentSet].cards[currentCard].back}
                     />
+                ) : (
+                    <Cards
+                        key={shuffle[currentCard].id}
+                        set={shuffle[currentCard].set}
+                        front={shuffle[currentCard].front}
+                        back={shuffle[currentCard].back}
+                    />
                 )}
-            </div>
-            <div className="type-answer" id={correctGuess}>
+            </div> 
+            <div className="type-answer">
                 <input
                     type="text"
                     placeholder="Enter guess .." 
                     value={guess}
                     onChange={(e) => setGuess(e.target.value)}
+                    id={correctGuess}
+                    className="input-text"
                 />
                 <button className ="button submit" type="submit" onClick={checkAnswer}>Check Guess</button>
             </div>
             <button className="nav-button prev-button" onClick={handlePrevious}></button>
+            <button className="shuffle" onClick={shuffleCards}>Shuffle Cards</button>
             <button className="nav-button next-button" onClick={handleNext}></button>
         </div>
     )
