@@ -162,6 +162,7 @@ button:focus-visible {
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;
+  margin-top: 30px;
   width: 50px;
   height: 50px;
   line-height: 50px;
@@ -199,6 +200,11 @@ button:focus-visible {
 
 /* New */
 
+.nav-button.prev-button:active, .nav-button.next-button:active {
+    transform: scale(0.81); 
+    background-color: #a213c6;
+}
+
 #correct {
   background-color: rgb(176, 235, 121);
 }
@@ -228,8 +234,13 @@ button:focus-visible {
   background-color: rgba(78, 185, 209, 0.611);
 }
 
+.button.submit:active {
+    transform: scale(0.95); 
+    background-color: rgba(78, 185, 209, 0.611);
+}
+
 .type-answer {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .shuffle {
@@ -243,5 +254,60 @@ button:focus-visible {
 }
 
 .shuffle:hover {
+    background-color: rgba(26, 100, 197, 0.416);
+}
+
+.shuffle:active {
+    transform: scale(0.95); 
+    background-color: rgba(26, 100, 197, 0.416);
+}
+
+@keyframes shuffle {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-20px, 10px); }
+    50% { transform: translate(20px, -10px); }
+    75% { transform: translate(-10px, 20px); }
+    100% { transform: translate(0, 0); }
+}
+
+.card-container.shuffling {
+    animation: shuffle 0.5s linear;
+}
+
+.add-mastered{
+  background-color: #2dd5549c;
+  font-size: large;
+  font-weight: bold;
+  width: 150px;
+  height: 39px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.add-mastered:hover {
+    background-color: #2dd55450;
+}
+
+.add-mastered:active {
+    transform: scale(0.95); 
+    background-color: rgba(26, 100, 197, 0.416);
+}
+
+.master-deck{
+  background-color: #2dd5549c;
+  font-size: large;
+  font-weight: bold;
+  width: 150px;
+  height: 39px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.master-deck:hover {
+    background-color: #2dd55449;
+}
+
+.master-deck:active {
+    transform: scale(0.95); 
     background-color: rgba(26, 100, 197, 0.416);
 }
