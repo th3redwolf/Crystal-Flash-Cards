@@ -16,7 +16,7 @@ This web app: **Crystal gem stone interactive knowledge game - Flashcards with u
 
 ## Video Walkthrough
 
-![Video Walkthrough](.crystal-flash-cards/hw3.gif)
+![Video Walkthrough](./crystal-flash-cards/hw3.gif)
 
 ## Notes
 
